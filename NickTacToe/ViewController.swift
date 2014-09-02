@@ -99,6 +99,9 @@ class ViewController: UIViewController {
         var whoWon = ["I":0, "You":1]
         var winner = false
         for(key,value) in whoWon {
+            //  #TODO Refactor this method - The if statement below severely broke after updating to Xcode Beta 6 with the following errors:
+            //  Cannot invoke '&&' with an argument list of type '($T78, $T84)'
+            //  Expression was too complex to be solved in reasonable time; consider breaking up the expression into distinct sub-expressions
             if winner == false {
                 if (plays[1] == value && plays[2] == value && plays[3] == value) {
                     winner = true
@@ -119,7 +122,6 @@ class ViewController: UIViewController {
                 }
             }
             if winner == true {
-                println(key)
                 userMessage.hidden = false
                 userMessage.text = "Looks like \(key) won!"
                 resetBtn.hidden = false
@@ -144,8 +146,8 @@ class ViewController: UIViewController {
 
     func rowCheck(#value:Int) -> (location:String, pattern:String)? {
         var acceptableFinds = ["011", "110", "101"]
-        var acceptablePatterns = ["top":[1,2,3], "bottom":[7,8,9], "left":[1,4,7], "right":[3,6,9], "middleHorz":[4,5,6], "middleDown":[2,5,8], "diagLeftRight":[1,5,9], "diagRightLeft":[7,5,3]]
-        for(k,v) in acceptablePatterns {
+        var possiblePatterns = ["top":[1,2,3], "bottom":[7,8,9], "left":[1,4,7], "right":[3,6,9], "middleHorizontal":[4,5,6], "middleVertical":[2,5,8], "diagLeftRight":[1,5,9], "diagRightLeft":[7,5,3]]
+        for(k,v) in possiblePatterns {
             var result = checkFor(value, inList: v)
             if contains(acceptableFinds, result) {
                 return (k, result)
@@ -205,7 +207,7 @@ class ViewController: UIViewController {
             }else{
                 return 6
             }
-        case "middleVert":
+        case "middleVertical":
             if pattern == leftPattern {
                 return 2
             }else if pattern == rightPattern{
@@ -213,7 +215,7 @@ class ViewController: UIViewController {
             }else{
                 return 5
             }
-        case "middleHorz":
+        case "middleHorizontal":
             if pattern == leftPattern {
                 return 4
             }else if pattern == rightPattern{
@@ -295,8 +297,9 @@ class ViewController: UIViewController {
         }
         
         userMessage.hidden = false
-        userMessage.text = "The Cat got the game"
-        reset()
+        userMessage.text = "It's a tie! Looks like the cat got the game"
+        resetBtn.hidden = false
+        done = true
         aiDeciding = false
     }
     
